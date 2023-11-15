@@ -1,13 +1,13 @@
 export const getDestChainAddress = async (chainName) => {
   switch (chainName) {
-    case "ethereum-2":
-      return "0xC4C295D556C88A61dD1dB2a58143BB416bFaA530";
+    case "Ethereum":
+      return "0x3E02bCf083201f40a7Ba3Aa56a88970B7cCBb5Bc";
+      break;
+    case "Base":
+      return "0xdbb86968f591537f30a5b3feb8d4cc6aec3c603b";
       break;
     case "Polygon":
-      return "0x5B799DC7CA6171880dA7F7dD90A2c8b15e5335d6";
-      break;
-    case "Avalanche":
-      return "0x13c76F0Ac8Ae7bAdf383A4f94099acdc1021cBE2";
+      return "0xB9b0f603Ad0aB9A4103b310592dEA2b7dc7D15e2";
       break;
     case "Moonbeam":
       return "0xd38875CCD7a985f64a6d9Ad8fE45a2f0dEB2ae7e";

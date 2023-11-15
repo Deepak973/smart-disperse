@@ -20,7 +20,7 @@ export const approveToken = async (
       );
       const tokenAmount = ethers.utils.parseUnits(amount, decimalValue);
       const tx = await tokenContract.approve(
-        "0xC67241F4c2e62Ef01DAE09404B31470F97390694",
+        "0xB9b0f603Ad0aB9A4103b310592dEA2b7dc7D15e2",
         tokenAmount
       );
       await tx.wait();

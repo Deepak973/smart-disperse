@@ -56,8 +56,9 @@ function Maindashboard() {
               id="view"
               className={activeTab === "view" ? "active" : ""}
               onClick={() => setActiveTab("view")}
+              disabled
             >
-              View Transactions
+              View Transactions (coming soon...)
             </button>
           </div>
         </div>

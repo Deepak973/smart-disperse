@@ -1,9 +1,9 @@
 import { ethers } from "ethers";
-import crossSendABI from "../artifacts/contracts/CrossSender.sol/CrossSender.json";
+import crossSendABI from "../artifacts/contracts/SmartDisperse.sol/SmartDisperse.json";
 
 export const CROSS_SENDER_ADDRESS =
   // "0x05c106CaD72b04c09F228286fEd949eC6f9539a7";
-  "0xC67241F4c2e62Ef01DAE09404B31470F97390694";
+  "0xB9b0f603Ad0aB9A4103b310592dEA2b7dc7D15e2";
 
 export const crossSendInstance = async () => {
   const { ethereum } = window;

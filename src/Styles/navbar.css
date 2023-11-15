@@ -12,6 +12,27 @@
   z-index: 2;
 }
 
+.logo-container {
+  margin: 20px; /* Add some margin to the container */
+}
+
+.logo-link {
+  text-decoration: none;
+  font-size: 24px; /* Adjust the font size as needed */
+  font-weight: bold; /* Make the text bold */
+  color: white; /* Set your desired text color */
+  display: inline-block;
+  padding: 10px 20px; /* Adjust the padding to your liking */
+  border: 2px solid #3498db; /* Add a border */
+  border-radius: 8px; /* Add rounded corners */
+  transition: background-color 0.3s, color 0.3s; /* Add a smooth transition effect */
+}
+
+.logo-link:hover {
+  background-color: #3498db; /* Change background color on hover */
+  color: #fff; /* Change text color on hover */
+}
+
 .div-to-flex-logo-connect-wallet img {
   height: 100px;
   width: 350px;

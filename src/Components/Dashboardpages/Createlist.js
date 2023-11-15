@@ -6,7 +6,8 @@ import { getTokenBalance } from "../../Helpers/TokenBalance";
 import { getGasFees } from "../../Helpers/getGasEstimation";
 import { approveToken } from "../../Helpers/ApproveToken";
 import DecimalValue from "../../Helpers/DecimalValue.json";
-
+import ChainID from "../../Helpers/ChainID.json";
+import { BigNumber } from "ethers";
 import tokensContractAddress from "../../Helpers/GetTokenContractAddress.json";
 import Modal from "react-modal";
 import { ethers } from "ethers";
@@ -15,7 +16,7 @@ import { useAccount, useSigner } from "wagmi";
 function Createlist() {
   const { address } = useAccount();
   const [listData, setListData] = useState([]);
-  const [tokenSymbolFinal, setTokenSymbol] = useState("aUSDC");
+  const [tokenSymbolFinal, setTokenSymbol] = useState("USDC");
   const [errorModalIsOpen, setErrorModalIsOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
@@ -24,7 +25,7 @@ function Createlist() {
   const [formData, setFormData] = useState({
     receiverAddress: "",
     tokenAmount: "",
-    chainName: "Polygon",
+    chainName: "Ethereum",
   });
   const ethereumAddressPattern = /^(0x)?[0-9a-fA-F]{40}$/;
 
@@ -108,35 +109,34 @@ function Createlist() {
     const promises = listData.map(async (item) => {
       const { chainName, receiverAddress, tokenAmount } = item;
 
-      if (!groupedData[chainName]) {
-        groupedData[chainName] = {
-          receivers: [],
+      if (!groupedData[ChainID[chainName]]) {
+        groupedData[ChainID[chainName]] = {
+          recipients: [],
           amounts: [],
-          destChain: "",
+          destChain: 0,
           detContractAddress: "",
-          tokenSymbol: "",
-          gasFees: 0,
+          token: "",
           calAmount: [],
         };
       }
 
-      const group = groupedData[chainName];
-      group.receivers.push(receiverAddress);
+      const group = groupedData[ChainID[chainName]];
+      group.recipients.push(receiverAddress);
       group.amounts.push(
         ethers.utils.parseUnits(tokenAmount, DecimalValue[tokenSymbolFinal])
       );
       group.calAmount.push(parseInt(tokenAmount));
-      group.destChain = chainName;
+      group.destChain = ChainID[chainName];
 
       // Use Promise.all to concurrently fetch data for each item
       const [destChainAddress, gasFees] = await Promise.all([
         getDestChainAddress(chainName),
-        getGasFees(chainName, tokenSymbolFinal),
+        // getGasFees(chainName, tokenSymbolFinal),
       ]);
 
       group.detContractAddress = destChainAddress;
-      group.tokenSymbol = tokenSymbolFinal;
-      group.gasFees = gasFees * 1000000000;
+      group.token = tokensContractAddress[tokenSymbolFinal];
+      // group.gasFees = gasFees * 1000000000;
     });
 
     // Wait for all promises to complete before returning the result
@@ -173,20 +173,6 @@ function Createlist() {
       .then(async (groupedData) => {
         console.log("Processed data for smart contract:", groupedData);
 
-        // get total gas fees
-        const totalGasFees = groupedData.reduce((sum, item) => {
-          return sum + (item.gasFees || 0);
-        }, 0);
-        console.log("Total gas fees required for Relayer: ", totalGasFees);
-        setTimeout(() => {
-          setAlertMessage(
-            `Total gas fees required to pay the Relayer: ${ethers.utils.formatEther(
-              totalGasFees
-            )} Scroll ETH`
-          );
-          setErrorModalIsOpen(true);
-        }, 3000);
-
         // get total token amount
         const totalTokenAmount = groupedData.reduce((sum, group) => {
           const groupTotal = group.amounts.reduce((acc, amount) => {
@@ -209,21 +195,33 @@ function Createlist() {
           if (isTokenApproved) {
             try {
               const con = await crossSendInstance();
-              const txsendPayment = await con.sendPayment(groupedData, {
-                value: totalGasFees,
-              });
+              const getquoteCrossChainDeposit =
+                await con.quoteCrossChainDeposit(2);
+
+              console.log(getquoteCrossChainDeposit);
+              const txsendPayment = await con.sendCrossChainDeposit(
+                groupedData,
+                {
+                  value: getquoteCrossChainDeposit,
+                  gasLimit: 500000,
+                }
+              );
 
               const receipt = await txsendPayment.wait();
               setLoading(false);
               setErrorMessage(
-                `Your Transaction was sucessfull, Visit Transaction History Page to view the details`
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: `Your Transaction was successful. Visit <a href="https://wormholescan.io/#/tx/${receipt.transactionHash}?network=TESTNET&view=overview" target="_blank">here</a> for details.`,
+                  }}
+                />
               );
               setErrorModalIsOpen(true);
               setListData([]);
               setSuccess(true);
               console.log("Transaction receipt:", receipt);
             } catch (e) {
-              console.log("transaction cancelled");
+              console.log("transaction cancelled", e);
             }
           }
         }
@@ -248,11 +246,7 @@ function Createlist() {
         <option value="" disabled selected>
           Select Token
         </option>
-        <option svalue="aUSDC">aUSDC</option>
-        <option value="axlWETH">axlWETH</option>
-        <option value="wAXL">wAXL</option>
-        <option value="WMATIC">WMATIC</option>
-        <option value="WDEV">WDEV</option>
+        <option value="USDC">USDC</option>
       </select>
 
       <div
@@ -286,11 +280,9 @@ function Createlist() {
           <option value="" disabled selected>
             Select Chain
           </option>
+          <option value="Ethereum">Ethereum</option>
           <option value="Polygon">Polygon</option>
-          <option value="ethereum-2">Ethereum</option>
-          <option value="Avalanche">Avalanche</option>
-          <option value="Moonbeam">Moonbeam</option>
-          <option value="arbitrum">Arbitrum</option>
+          <option value="Base">Base</option>
         </select>
         <button className="button-to-add-form-data" onClick={handleAddClick}>
           Add to List

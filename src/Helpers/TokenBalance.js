@@ -8,6 +8,7 @@ export const getTokenBalance = async (address, tokenContractAddress) => {
   const { ethereum } = window;
   if (ethereum) {
     try {
+      console.log("contract", tokenContractAddress);
       const provider = new ethers.providers.Web3Provider(ethereum);
       const tokenContract = new ethers.Contract(
         tokenContractAddress,

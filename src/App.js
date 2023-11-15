@@ -7,14 +7,14 @@ import Footer from "./Components/homepages/Footer";
 import "@rainbow-me/rainbowkit/styles.css";
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
-import { scrollSepolia } from "wagmi/chains";
+import { polygonMumbai } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 import "./App.css"; // Import your CSS file here
 import Samemaindashboard from "./Components/Dashboardpages/Samechainpages/Samemaindashboard";
 
 const { chains, publicClient } = configureChains(
-  [scrollSepolia],
+  [polygonMumbai],
   [alchemyProvider({ apiKey: process.env.ALCHEMY_ID }), publicProvider()]
 );
 

@@ -217,7 +217,7 @@ function SameCreateList() {
                 setErrorMessage(
                   <div
                     dangerouslySetInnerHTML={{
-                      __html: `Your Transaction was successful. Visit <a href="https://sepolia.scrollscan.dev/tx/${receipt.transactionHash}" target="_blank">here</a> for details.`,
+                      __html: `Your Transaction was successful. Visit <a href="https://mumbai.polygonscan.com/tx/${receipt.transactionHash}" target="_blank">here</a> for details.`,
                     }}
                   />
                 );
@@ -298,7 +298,7 @@ function SameCreateList() {
           setErrorMessage(
             <div
               dangerouslySetInnerHTML={{
-                __html: `Your Transaction was successful. Visit <a href="https://sepolia.scrollscan.dev/tx/${receipt.transactionHash}" target="_blank">here</a> for details.`,
+                __html: `Your Transaction was successful. Visit <a href="https://mumbai.polygonscan.com/tx/${receipt.transactionHash}" target="_blank">here</a> for details.`,
               }}
             />
           );

@@ -8,14 +8,10 @@ function Navbar() {
   return (
     <div>
       <div className="div-to-flex-logo-connect-wallet">
-        <div>
-          <Link to="/">
-            <img
-              className="smart-logo-portal"
-              src={smartlogo}
-              alt="not foundd"
-            />
-          </Link>
+        <div class="logo-container">
+          <a class="logo-link" href="/">
+            Smart Disperse
+          </a>
         </div>
         <div className="connect-wallet-button-div">
           <ConnectButton />
